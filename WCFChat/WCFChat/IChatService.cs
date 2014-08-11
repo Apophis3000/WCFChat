@@ -13,6 +13,24 @@ namespace WCFChat
     public interface IChatService
     {
         [OperationContract]
-        bool Connect(Person p);
+        bool Connect(string p);
+
+        [OperationContract]
+        void Disconnect(string p);
+
+        [OperationContract]
+        void Say(string user, string message);
+
+        [OperationContract]
+        void Whisper(string sender, string recipient, string message);
+
+        [OperationContract]
+        List<Message> RetrieveMessages(string user);
+
+        [OperationContract]
+        void SwitchChannel(string person, string channelName);
+
+        [OperationContract]
+        List<string> IChatService.GetChannels();
     }
 }

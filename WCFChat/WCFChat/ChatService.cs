@@ -12,52 +12,46 @@ namespace WCFChat
         ConcurrencyMode = ConcurrencyMode.Multiple)]
     public class ChatService : IChatService
     {
-        static List<Person> connections;
-        static List<Channel> channels;
+        static ChatEngine engine = new ChatEngine();
 
         public ChatService()
         {
-            connections = new List<Person>();
-            channels = new List<Channel>();
-
-            channels.Add(new Channel("Lobby"));
-            channels.Add(new Channel("Channel1"));
-            channels.Add(new Channel("Channel2"));
-            channels.Add(new Channel("Channel3"));
         }
 
-        bool IChatService.Connect(Person p)
+        bool IChatService.Connect(string p)
         {
-            if (connections.Find(x => x.UserName == p.UserName) != null)
-            {
-                return false;                
-            }
-
-            connections.Add(p);
-            p.IsConnected = true;
-
-            SwitchChannel(p, "Lobby");
-            
-            return true;
+            return engine.Connect(p);
         }
 
-        void SwitchChannel(Person person, string channelName)
+        void IChatService.Disconnect(string p)
         {
-            foreach (Channel c in channels)
-            {
-                Person p = c.Users.Find(x => x.UserName == person.UserName);
-                if (p != null)
-                {
-                    c.Users.Remove(p);
-                }
-            }
+            engine.Disconnect(p); 
+        }
 
-            Channel newChannel = channels.Find(x => x.Name == channelName);
 
-            if (!newChannel.Users.Contains(person))
-            {
-                newChannel.Users.Add(person);
-            }
+        void IChatService.Say(string user, string message)
+        {
+            engine.Say(user, message);
+        }
+
+        void IChatService.Whisper(string sender, string recipient, string message)
+        {
+            engine.Whisper(sender, recipient, message);
+        }
+
+        List<Message> IChatService.RetrieveMessages(string user)
+        {
+            return engine.RetrieveMessages(user);
+        }
+
+        void IChatService.SwitchChannel(string person, string channelName)
+        {
+            engine.SwitchChannel(person, channelName);
+        }
+
+        List<string> IChatService.GetChannels()
+        {
+            return engine.GetChannelNames();
         }
     }
 }

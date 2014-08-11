@@ -15,11 +15,21 @@ namespace TestClient
             Person p1 = new Person("Thrall");
             Person p2 = new Person("Rexxar");
 
-            bool val1 = service.Connect(p1);
-            bool val2 = service.Connect(p2);
+            bool val1 = service.Connect(p1.UserName);
+            bool val2 = service.Connect(p2.UserName);
 
-            Console.WriteLine(val1);
-            Console.WriteLine(val2);
+            Console.WriteLine(service.RetrieveMessages(p1.UserName)[0].Text);
+
+            service.Say(p1.UserName, "Hallo Welt");
+            Console.WriteLine(service.RetrieveMessages(p1.UserName)[0].Text);
+            Console.WriteLine(service.RetrieveMessages(p2.UserName)[1].Text);
+
+            service.Whisper(p1.UserName, p2.UserName, "Hallo Rexxar!");
+
+            Console.WriteLine(service.RetrieveMessages(p1.UserName)[0].Text);
+            Console.WriteLine(service.RetrieveMessages(p2.UserName)[0].Text);
+
+            Console.ReadLine();            
         }
     }
 }

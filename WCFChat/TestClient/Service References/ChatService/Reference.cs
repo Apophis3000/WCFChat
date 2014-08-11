@@ -16,10 +16,40 @@ namespace TestClient.ChatService {
     public interface IChatService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatService/Connect", ReplyAction="http://tempuri.org/IChatService/ConnectResponse")]
-        bool Connect(Model.Person p);
+        bool Connect(string p);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatService/Connect", ReplyAction="http://tempuri.org/IChatService/ConnectResponse")]
-        System.Threading.Tasks.Task<bool> ConnectAsync(Model.Person p);
+        System.Threading.Tasks.Task<bool> ConnectAsync(string p);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatService/Disconnect", ReplyAction="http://tempuri.org/IChatService/DisconnectResponse")]
+        void Disconnect(string p);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatService/Disconnect", ReplyAction="http://tempuri.org/IChatService/DisconnectResponse")]
+        System.Threading.Tasks.Task DisconnectAsync(string p);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatService/Say", ReplyAction="http://tempuri.org/IChatService/SayResponse")]
+        void Say(string user, string message);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatService/Say", ReplyAction="http://tempuri.org/IChatService/SayResponse")]
+        System.Threading.Tasks.Task SayAsync(string user, string message);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatService/Whisper", ReplyAction="http://tempuri.org/IChatService/WhisperResponse")]
+        void Whisper(string sender, string recipient, string message);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatService/Whisper", ReplyAction="http://tempuri.org/IChatService/WhisperResponse")]
+        System.Threading.Tasks.Task WhisperAsync(string sender, string recipient, string message);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatService/RetrieveMessages", ReplyAction="http://tempuri.org/IChatService/RetrieveMessagesResponse")]
+        Model.Message[] RetrieveMessages(string user);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatService/RetrieveMessages", ReplyAction="http://tempuri.org/IChatService/RetrieveMessagesResponse")]
+        System.Threading.Tasks.Task<Model.Message[]> RetrieveMessagesAsync(string user);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatService/SwitchChannel", ReplyAction="http://tempuri.org/IChatService/SwitchChannelResponse")]
+        void SwitchChannel(string person, string channelName);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatService/SwitchChannel", ReplyAction="http://tempuri.org/IChatService/SwitchChannelResponse")]
+        System.Threading.Tasks.Task SwitchChannelAsync(string person, string channelName);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -49,12 +79,52 @@ namespace TestClient.ChatService {
                 base(binding, remoteAddress) {
         }
         
-        public bool Connect(Model.Person p) {
+        public bool Connect(string p) {
             return base.Channel.Connect(p);
         }
         
-        public System.Threading.Tasks.Task<bool> ConnectAsync(Model.Person p) {
+        public System.Threading.Tasks.Task<bool> ConnectAsync(string p) {
             return base.Channel.ConnectAsync(p);
+        }
+        
+        public void Disconnect(string p) {
+            base.Channel.Disconnect(p);
+        }
+        
+        public System.Threading.Tasks.Task DisconnectAsync(string p) {
+            return base.Channel.DisconnectAsync(p);
+        }
+        
+        public void Say(string user, string message) {
+            base.Channel.Say(user, message);
+        }
+        
+        public System.Threading.Tasks.Task SayAsync(string user, string message) {
+            return base.Channel.SayAsync(user, message);
+        }
+        
+        public void Whisper(string sender, string recipient, string message) {
+            base.Channel.Whisper(sender, recipient, message);
+        }
+        
+        public System.Threading.Tasks.Task WhisperAsync(string sender, string recipient, string message) {
+            return base.Channel.WhisperAsync(sender, recipient, message);
+        }
+        
+        public Model.Message[] RetrieveMessages(string user) {
+            return base.Channel.RetrieveMessages(user);
+        }
+        
+        public System.Threading.Tasks.Task<Model.Message[]> RetrieveMessagesAsync(string user) {
+            return base.Channel.RetrieveMessagesAsync(user);
+        }
+        
+        public void SwitchChannel(string person, string channelName) {
+            base.Channel.SwitchChannel(person, channelName);
+        }
+        
+        public System.Threading.Tasks.Task SwitchChannelAsync(string person, string channelName) {
+            return base.Channel.SwitchChannelAsync(person, channelName);
         }
     }
 }

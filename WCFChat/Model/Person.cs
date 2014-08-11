@@ -16,6 +16,12 @@ namespace Model
         [DataMember] 
         public bool IsConnected { get; set; }
 
+        [DataMember]
+        public string CurrentChannelName { get; set; }
+
+        public Person()
+        { }
+
         public Person(string userName)
         {
             UserName = userName;
