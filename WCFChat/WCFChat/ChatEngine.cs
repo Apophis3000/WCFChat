@@ -27,7 +27,7 @@ namespace WCFChat
         {
             if (channels.Any(x => x.Value.Find(y => y.UserName == user) != null))
             {
-                messages[user].Add(new Message(user, "User name not available!", EMessageType.System));
+                messages[user].Add(new Message("system", "User name not available!", EMessageType.System));
                 return false;
             }
 
@@ -37,7 +37,7 @@ namespace WCFChat
             //SwitchChannel(user, "Lobby");
 
             messages.Add(user, new List<Message>());
-            messages[user].Add(new Message(user, "Welcome to the chat!", EMessageType.System));
+            messages[user].Add(new Message("system", "Welcome to the chat!", EMessageType.System));
             return true;
         }
 
@@ -49,7 +49,13 @@ namespace WCFChat
 
                 if (leaver != null)
                 {
-                    channel.Value.Remove(leaver); 
+                    channel.Value.Remove(leaver);
+
+                    foreach(var user in channel.Value)
+                    {
+                        messages[user.UserName].Add(new Message("system", 
+			   string.Format("{0} has left the channel!", leaver.UserName) , EMessageType.System));
+		    } 
                 }
             }
 
