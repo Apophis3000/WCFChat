@@ -31,6 +31,6 @@ namespace WCFChat
         void SwitchChannel(string person, string channelName);
 
         [OperationContract]
-        List<string> IChatService.GetChannels();
+        List<string> GetChannels();
     }
 }

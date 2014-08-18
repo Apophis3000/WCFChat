@@ -32,12 +32,13 @@ namespace WCFChat
             }
 
             Person p = new Person() { UserName = user, IsConnected = true };
-
-            channels["Lobby"].Add(p);
-            //SwitchChannel(user, "Lobby");
-
             messages.Add(user, new List<Message>());
+
+            //channels["Lobby"].Add(p);
+            
+            
             messages[user].Add(new Message(user, "Welcome to the chat!", EMessageType.System));
+            JoinChannel(p, "Lobby");
             return true;
         }
 
@@ -104,23 +105,53 @@ namespace WCFChat
 
         public void SwitchChannel(string user, string channelName)
         {
-            /*
-            foreach (Channel c in channels)
+            Person p = LeaveCurrentChannel(user);
+            if (p != null)
             {
-                Person p = c.Users.Find(x => x.UserName == user.UserName);
-                if (p != null)
+                JoinChannel(p, channelName);
+            }
+        }
+
+        private void JoinChannel(Person p, string channelName)
+        {
+            foreach (var c in channels)
+            {
+                if (c.Key == channelName)
                 {
-                    c.Users.Remove(p);
+                    c.Value.Add(p);
+
+                    foreach (var u in c.Value)
+                    {
+                        if (u.UserName != p.UserName)
+                        {
+                            messages[u.UserName].Add(new Message("system", string.Format("{0} has joined the channel.", p.UserName), EMessageType.System));
+                        }
+                    }
                 }
             }
 
-            Channel newChannel = channels.Find(x => x.Name == channelName);
+            messages[p.UserName].Add(new Message("system", string.Format("Welcome to the channel {0}!", channelName), EMessageType.System));                    
+        }
 
-            if (!newChannel.Users.Contains(person))
+        private Person LeaveCurrentChannel(string user)
+        {
+            foreach (var c in channels)
             {
-                newChannel.Users.Add(person);                
+                Person p = c.Value.Find(x => x.UserName == user);
+
+                if (p != null)
+                {
+                    c.Value.Remove(p);
+
+                    foreach (var u in c.Value)
+                    {
+                        messages[u.UserName].Add(new Message("system", string.Format("{0} has left the channel.", p.UserName), EMessageType.System));
+                    }
+                    return p;
+                }
             }
-             */
+
+            return null;
         }
 
         public List<string> GetChannelNames()

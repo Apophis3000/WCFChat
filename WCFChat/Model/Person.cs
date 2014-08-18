@@ -20,7 +20,9 @@ namespace Model
         public string CurrentChannelName { get; set; }
 
         public Person()
-        { }
+        {
+            UserName = string.Empty;
+        }
 
         public Person(string userName)
         {

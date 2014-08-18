@@ -50,6 +50,12 @@ namespace TestClient.ChatService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatService/SwitchChannel", ReplyAction="http://tempuri.org/IChatService/SwitchChannelResponse")]
         System.Threading.Tasks.Task SwitchChannelAsync(string person, string channelName);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatService/GetChannels", ReplyAction="http://tempuri.org/IChatService/GetChannelsResponse")]
+        string[] GetChannels();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatService/GetChannels", ReplyAction="http://tempuri.org/IChatService/GetChannelsResponse")]
+        System.Threading.Tasks.Task<string[]> GetChannelsAsync();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -125,6 +131,14 @@ namespace TestClient.ChatService {
         
         public System.Threading.Tasks.Task SwitchChannelAsync(string person, string channelName) {
             return base.Channel.SwitchChannelAsync(person, channelName);
+        }
+        
+        public string[] GetChannels() {
+            return base.Channel.GetChannels();
+        }
+        
+        public System.Threading.Tasks.Task<string[]> GetChannelsAsync() {
+            return base.Channel.GetChannelsAsync();
         }
     }
 }
