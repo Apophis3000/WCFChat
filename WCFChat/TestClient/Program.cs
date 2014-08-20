@@ -9,17 +9,37 @@ namespace TestClient
 {
     class Program
     {
+        static void PrintMessages(List<Message> msgs)
+        {
+            foreach (var msg in msgs)
+            {
+                Console.WriteLine(msg.Text);
+            }
+        }
+
         static void Main(string[] args)
         {
             ChatService.ChatServiceClient service = new ChatService.ChatServiceClient();
             Person p1 = new Person("Thrall");
             Person p2 = new Person("Rexxar");
 
-            bool val1 = service.Connect(p1);
-            bool val2 = service.Connect(p2);
+            bool val1 = service.Connect(p1.UserName);
+            bool val2 = service.Connect(p2.UserName);
 
-            Console.WriteLine(val1);
-            Console.WriteLine(val2);
+            PrintMessages(service.RetrieveMessages(p1.UserName).ToList());
+
+            service.Say(p1.UserName, "Hallo Welt");
+            PrintMessages(service.RetrieveMessages(p1.UserName).ToList());
+            PrintMessages(service.RetrieveMessages(p2.UserName).ToList());
+
+            service.SwitchChannel("Rexxar", "Channel1");
+
+            service.Whisper(p1.UserName, p2.UserName, "Hallo Rexxar!");
+
+            PrintMessages(service.RetrieveMessages(p1.UserName).ToList());
+            PrintMessages(service.RetrieveMessages(p2.UserName).ToList());
+
+            Console.ReadLine();            
         }
     }
 }

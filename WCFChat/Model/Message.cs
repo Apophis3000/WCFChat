@@ -7,35 +7,30 @@ using System.Threading.Tasks;
 
 namespace Model
 {
+    public enum EMessageType
+    {
+        Say = 0,
+        Whisper = 1,
+        System = 2
+    }
+
     [DataContract]
     public class Message
     {
-        [DataMember]
-        public string FromUserName { get; set; }
+        [DataMember] 
+        public string Author { get; set; }
 
-        [DataMember]
-        public string ToUserName { get; set; }
-
-        [DataMember]
+        [DataMember] 
         public string Text { get; set; }
 
-        [DataMember]
-        public bool IsPrivate { get; set; }
+        [DataMember] 
+        public EMessageType MessageType { get; set; }
 
-        public Message(string text, string fromUserName, string toUserName = null)
+        public Message(string author, string text, EMessageType type)
         {
+            Author = author;
             Text = text;
-            FromUserName = fromUserName;
-            ToUserName = toUserName;
-
-            if (!String.IsNullOrEmpty(toUserName))
-            {
-                IsPrivate = true;
-            }
-            else
-            {
-                IsPrivate = false;
-            }
+            MessageType = type;
         }
     }
 }
