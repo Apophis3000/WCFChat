@@ -1,0 +1,6 @@
+C:\Users\Cedric\Documents\Visual Studio 2013\Projects\ChatClient\TestServer\obj\Debug\TestServer.csprojResolveAssemblyReference.cache
+C:\Users\Cedric\Documents\Visual Studio 2013\Projects\ChatClient\TestServer\bin\Debug\TestServer.exe.config
+C:\Users\Cedric\Documents\Visual Studio 2013\Projects\ChatClient\TestServer\bin\Debug\TestServer.exe
+C:\Users\Cedric\Documents\Visual Studio 2013\Projects\ChatClient\TestServer\bin\Debug\TestServer.pdb
+C:\Users\Cedric\Documents\Visual Studio 2013\Projects\ChatClient\TestServer\obj\Debug\TestServer.exe
+C:\Users\Cedric\Documents\Visual Studio 2013\Projects\ChatClient\TestServer\obj\Debug\TestServer.pdb
