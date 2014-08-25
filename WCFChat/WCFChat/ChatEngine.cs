@@ -87,13 +87,13 @@ namespace WCFChat
 
                 if (recpt != null)
                 {
-                    messages[sender].Add(new Message(sender, message, EMessageType.Whisper));
-                    messages[recpt.UserName].Add(new Message(sender, message, EMessageType.Whisper));
+                    messages[sender].Add(new Message(sender, recipient, message, EMessageType.Whisper));
+                    messages[recpt.UserName].Add(new Message(sender, recipient, message, EMessageType.Whisper));
                     return;
                 }
             }        
 
-            messages[sender].Add(new Message(sender, "User is currently not connected", EMessageType.System));
+            messages[sender].Add(new Message(sender, recipient, "User is currently not connected", EMessageType.System));
         }
 
         public List<Message> RetrieveMessages(string user)
