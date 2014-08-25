@@ -14,15 +14,16 @@ using System.Windows.Forms;
 
 using ChatClient.Dialog;
 using ChatClient.ServerContent;
-using WcfService;
+using ChatClient.ServiceReference1;
+using Model;
 
 namespace ChatClient
 {
     public partial class MainForm : Form
     {
-        private TestServer.TestService testService = new TestServer.TestService();
+        private TestServer.TestService testService = new TestServer.TestService(); //old
 
-        private enum MessageType
+        private enum ClientMessageType
         {
             Say,
             WhisperToMe,
@@ -30,8 +31,11 @@ namespace ChatClient
             System,
         }
 
+        private ChannelFactory<IChatService> remoteFactory;
+        private IChatService remoteProxy;
+        private SettingsForm settingsForm;
         private TcpListener tcpListener;
-        private string myUsername = string.Empty;
+        private Person me;
         private bool isConnected = false;
         private ChatExtendedFunctions chatExtFunctions;
         private ServerViewer serverViewer;
@@ -42,6 +46,13 @@ namespace ChatClient
             Init();
         }
 
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            settingsForm = new SettingsForm();
+
+            me = new Person();
+            me.UserName = string.Empty;
+        }
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (isConnected)
@@ -60,19 +71,20 @@ namespace ChatClient
         }
         private void verbindenToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //Dialog für Verbindungsdaten öffnen
-            ConnectionForm connectionForm = new ConnectionForm();
-            connectionForm.ShowDialog();
+            remoteFactory = new ChannelFactory<IChatService>("WSHttpBinding_IChatService");
+            remoteProxy = remoteFactory.CreateChannel();
 
-            if (!connectionForm.IsCanceled)
+            isConnected = this.Connect(this.GetIP(settingsForm.Address), int.Parse(settingsForm.Port));
+
+            if (isConnected)
             {
-                isConnected = this.Connect(this.GetIP(connectionForm.Address), int.Parse(connectionForm.Port));
-                if (isConnected)
-                {
-                    serverViewer = new ServerViewer(treeViewServer, testService);
+                serverViewer = new ServerViewer(treeViewServer, remoteProxy);
 
-                    tmrUpdate.Start();
-                }
+                tmrUpdate.Start();
+            }
+            else
+            {
+                this.WriteNewMessageToChat("Verbindung fehlgeschlagen", ClientMessageType.System, "System");
             }
         }
         private void verbindungTrennenToolStripMenuItem_Click(object sender, EventArgs e)
@@ -82,6 +94,11 @@ namespace ChatClient
         private void beendenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+        private void benutzernameÄndernToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            settingsForm = new SettingsForm();
+            settingsForm.Show();
         }
         private void txtBoxWhisperUsername_MouseClick(object sender, MouseEventArgs e)
         {
@@ -145,12 +162,12 @@ namespace ChatClient
                 if (cboBoxMessageType.SelectedItem == cboBoxMessageType.Items[0])
                 {
                     //Sagen
-                    this.SendNewMessage(chatText, MessageType.Say);
+                    this.SendNewMessage(chatText, ClientMessageType.Say);
                 }
                 else if (cboBoxMessageType.SelectedItem == cboBoxMessageType.Items[1])
                 {
                     //Flüstern
-                    this.SendNewMessage(chatText, MessageType.WhisperFromMe, txtBoxWhisperUsername.Text);
+                    this.SendNewMessage(chatText, ClientMessageType.WhisperFromMe, txtBoxWhisperUsername.Text);
                 }
             }
         }
@@ -165,11 +182,11 @@ namespace ChatClient
                 Channel selectedChannel = (Channel)e.Node.Tag;
 
                 //Dienst - SwitchChannel();
-                string systemText = serverViewer.SwitchChannel(selectedChannel.Id, myUsername, testService);
+                string systemText = serverViewer.SwitchChannel(selectedChannel.Id, me.UserName, remoteProxy);
 
                 if (!String.IsNullOrEmpty(systemText))
                 {
-                    this.WriteNewMessageToChat(systemText, MessageType.System, "System");
+                    this.WriteNewMessageToChat(systemText, ClientMessageType.System, "System");
                 }
             }
             else if (e.Node.Level >= 2)
@@ -222,37 +239,36 @@ namespace ChatClient
         }
         private void tmrUpdate_Tick(object sender, EventArgs e)
         {
-            if (testService.NeedServerViewUpdate())
+            if (testService.NeedServerViewUpdate()) //Ersetzen??
             {
-                treeViewServer = serverViewer.Update(testService);
+                treeViewServer = serverViewer.Update(remoteProxy);
             }
 
-            //Dienst - GetMessages();
-            List<TestServer.Message> messages = testService.GetMessages(myUsername);
+            Model.Message[] messages = remoteProxy.RetrieveMessages(me.UserName);
 
-            if (messages != null)
+            if (messages != null && messages.Length > 0 && messages[0] != null)
             {
-                foreach (TestServer.Message message in messages)
+                foreach (Model.Message message in messages)
                 {
-                    if (message.MessageType == 0)
+                    if (message.MessageType == EMessageType.Say)
                     {
-                        this.WriteNewMessageToChat(message.Text, MessageType.Say, message.FromUsername, message.ToUsername);
+                        this.WriteNewMessageToChat(message.Text, ClientMessageType.Say, message.Author, message.ToUsername);
                     }
-                    else if (message.MessageType == 1)
+                    else if (message.MessageType == EMessageType.Whisper)
                     {
-                        if (myUsername == message.FromUsername)
+                        if (me.UserName == message.Author)
                         {
-                            this.WriteNewMessageToChat(message.Text, MessageType.WhisperFromMe, message.FromUsername, message.ToUsername);
+                            this.WriteNewMessageToChat(message.Text, ClientMessageType.WhisperFromMe, message.Author, message.ToUsername);
                         }
                         
-                        if (myUsername == message.ToUsername)
+                        if (me.UserName == message.ToUsername)
                         {
-                            this.WriteNewMessageToChat(message.Text, MessageType.WhisperToMe, message.FromUsername, message.ToUsername);
+                            this.WriteNewMessageToChat(message.Text, ClientMessageType.WhisperToMe, message.Author, message.ToUsername);
                         }
                     }
                     else
                     {
-                        this.WriteNewMessageToChat(message.Text, MessageType.System, message.FromUsername, message.ToUsername);
+                        this.WriteNewMessageToChat(message.Text, ClientMessageType.System, message.Author, message.ToUsername);
                     }
                 }
             }
@@ -293,14 +309,12 @@ namespace ChatClient
                 this.bckGrWorkerTCP.RunWorkerAsync(tcpListener);
 
                 Random random = new Random();
-                myUsername = (!String.IsNullOrEmpty(Properties.Settings.Default.Username)) ? Properties.Settings.Default.Username : "Benutzer_" + (random.Next(0, 999).ToString());
+                me.UserName = (!String.IsNullOrEmpty(Properties.Settings.Default.Username)) ? Properties.Settings.Default.Username : "Benutzer_" + (random.Next(0, 999).ToString());
 
-                //Verbindung zum Service aufbauen
-                string systemText = testService.Connect(myUsername);
-
-                if (!String.IsNullOrEmpty(systemText))
+                //Verbindung zum Server aufbauen
+                if (remoteProxy.Connect(me.UserName))
                 {
-                    this.WriteNewMessageToChat(systemText, MessageType.System, "System");
+                    this.WriteNewMessageToChat("### Willkommen auf unserem Chatserver ###", ClientMessageType.System, "System");
 
                     //Chat-Komponenten enablen
                     this.ChatEnable(true);
@@ -309,7 +323,7 @@ namespace ChatClient
                 }
                 else
                 {
-                    this.WriteNewMessageToChat("Verbindung zum Serverdienst konnte nicht hergestellt werden.", MessageType.System, "System");
+                    this.WriteNewMessageToChat("Verbindung zum Serverdienst konnte nicht hergestellt werden.", ClientMessageType.System, "System");
 
                     return false;
                 }
@@ -323,8 +337,9 @@ namespace ChatClient
         }
         private void Disconnect()
         {
-            //Verbindung zum Serverdienst trennen
-            bool serviceDisconnected = testService.Disconnect(myUsername);
+            //Verbindung zum Server trennen
+            bool serviceDisconnected = testService.Disconnect(me.UserName);
+            remoteProxy.Disconnect(me.UserName); //bool-Rückgabe fehlt!!
 
             if (serviceDisconnected)
             {
@@ -336,38 +351,38 @@ namespace ChatClient
 
                 treeViewServer.Nodes.Clear();
 
-                this.WriteNewMessageToChat("Verbindung beendet.", MessageType.System, "System");
+                this.WriteNewMessageToChat("Verbindung beendet.", ClientMessageType.System, "System");
 
                 isConnected = false;
             }
             
         }
-        private void WriteNewMessageToChat(string newMessage, MessageType chatType, string fromUsername, string ToUsername = "")
+        private void WriteNewMessageToChat(string newMessage, ClientMessageType chatType, string fromUsername, string ToUsername = "")
         {
             DateTime date = DateTime.Now;
             string dateFormatted = date.ToString("dd.MM.yyyy HH:mm");
 
             string newChatLine = "";
 
-            if (chatType == MessageType.Say)
+            if (chatType == ClientMessageType.Say)
             {
                 newChatLine = "[" + dateFormatted + "] " + fromUsername + ": " + newMessage + "\r\n";
 
                 chatExtFunctions.AddTextToChat(ref rtxtBoxChat, newChatLine);
             }
-            else if (chatType == MessageType.WhisperToMe)
+            else if (chatType == ClientMessageType.WhisperToMe)
             {
                 newChatLine = "[" + dateFormatted + "] " + fromUsername + " (flüstert dir): " + newMessage + "\r\n";
 
                 chatExtFunctions.AddTextToChat(ref rtxtBoxChat, newChatLine, Color.Green);
             }
-            else if (chatType == MessageType.WhisperFromMe)
+            else if (chatType == ClientMessageType.WhisperFromMe)
             {
                 newChatLine = "[" + dateFormatted + "] Du flüsterst " + ToUsername + ": " + newMessage + "\r\n";
 
                 chatExtFunctions.AddTextToChat(ref rtxtBoxChat, newChatLine, Color.Green);
             }
-            else if (chatType == MessageType.System)
+            else if (chatType == ClientMessageType.System)
             {
                 newChatLine = "[" + dateFormatted + "] System:: " + newMessage + "\r\n";
 
@@ -376,19 +391,17 @@ namespace ChatClient
 
             txtBoxChatEnter.Focus();
         }
-        private void SendNewMessage(string myNewMessage, MessageType chatType, string ToUsername = "")
+        private void SendNewMessage(string myNewMessage, ClientMessageType chatType, string ToUsername = "")
         {
-            if (chatType == MessageType.Say)
+            if (chatType == ClientMessageType.Say)
             {
-                //Dienst - Say();
-                testService.Say(myNewMessage, myUsername);
+                remoteProxy.Say(me.UserName, myNewMessage);
             }
-            else if (chatType == MessageType.WhisperFromMe)
+            else if (chatType == ClientMessageType.WhisperFromMe)
             {
                 if (!String.IsNullOrEmpty(ToUsername))
                 {
-                    //Dienst - Whisper();
-                    testService.Whisper(myNewMessage, myUsername, ToUsername);
+                    remoteProxy.Whisper(me.UserName, ToUsername, myNewMessage);
                 }
                 else
                 {
@@ -482,8 +495,3 @@ namespace ChatClient
         }
     }
 }
-
-
-//http://msdn.microsoft.com/de-de/library/ms731144(v=vs.110).aspx -> automatische Erstellung einer Clientbindung (Dienst muss vorhanden sein)
-//http://msdn.microsoft.com/de-de/library/aa751847(v=vs.110).aspx
-//http://msdn.microsoft.com/de-de/library/aa347733(v=vs.110).aspx

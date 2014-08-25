@@ -6,6 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using System.ServiceModel;
+using ChatClient.ServiceReference1;
+
 namespace ChatClient.ServerContent
 {
     public class ServerViewer
@@ -13,22 +16,20 @@ namespace ChatClient.ServerContent
         List<Channel> serverChannels;
         private TreeView treeViewServer;
 
-        public ServerViewer(TreeView treeViewServer, TestServer.TestService testService)
+        public ServerViewer(TreeView treeViewServer, IChatService remoteProxy)
         {
             this.treeViewServer = treeViewServer;
 
             //Channel-Struktur aufbauen
-            this.BuildServerStructure(testService);
+            this.BuildServerStructure(remoteProxy);
         }
 
-        public TreeView Update(TestServer.TestService testService)
+        public TreeView Update(IChatService remoteProxy)
         {
             //Dienst - Channels und ihre Benutzer
             List<List<string>> usersInChannels = testService.GetUsersAndTheirChannels();
+            //remoteProxy. // GetUsers() fehlt!!
 
-            //Wenn falsche Struktur vom Serverdienst erhalten
-            if (usersInChannels.Count != serverChannels.Count)
-                return null;
 
             //Serveransicht aktualisieren
             treeViewServer.BeginUpdate();
@@ -43,24 +44,22 @@ namespace ChatClient.ServerContent
 
             return treeViewServer;
         }
-        public string SwitchChannel(int channelId, string username, TestServer.TestService testService)
+        public string SwitchChannel(int channelId, string username, IChatService remoteProxy)
         {
-            //Dienst - SwitchChannel();
-            return testService.SwitchChannel(channelId, username);
+            remoteProxy.SwitchChannel(username, serverChannels[channelId].Name);
+
+            return "Du bist dem Channel " + serverChannels[channelId].Name + " beigetreten";
         }
 
-        private void BuildServerStructure(TestServer.TestService testService)
+        private void BuildServerStructure(IChatService remoteProxy)
         {
-            //Dienst - GetCountChannels();
-            int countChannels = testService.GetCountChannels();
+            string[] channelNames = remoteProxy.GetChannels();
 
             serverChannels = new List<Channel>();
 
-            serverChannels.Add(new Channel(0, "Lobby"));
-
-            for (int index = 1; index < countChannels; index++)
+            foreach (string channelName in channelNames)
             {
-                serverChannels.Add(new Channel(index, "Channel - " + index));
+                serverChannels.Add(new Channel(0, channelName));
             }
 
             TreeNode rootNode = new TreeNode();

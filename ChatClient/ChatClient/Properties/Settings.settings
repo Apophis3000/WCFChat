@@ -5,11 +5,11 @@
     <Setting Name="Username" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="StandardAddress" Type="System.String" Scope="User">
+    <Setting Name="Address" Type="System.String" Scope="User">
       <Value Profile="(Default)">Localhost</Value>
     </Setting>
-    <Setting Name="StandardPort" Type="System.String" Scope="User">
-      <Value Profile="(Default)">1234</Value>
+    <Setting Name="Port" Type="System.String" Scope="User">
+      <Value Profile="(Default)">12345</Value>
     </Setting>
   </Settings>
 </SettingsFile>

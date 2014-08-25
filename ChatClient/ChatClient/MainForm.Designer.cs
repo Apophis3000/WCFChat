@@ -37,6 +37,8 @@
             this.verbindenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.verbindungTrennenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.beendenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.einstellungenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.benutzernameÄndernToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainerClient = new System.Windows.Forms.SplitContainer();
             this.treeViewServer = new System.Windows.Forms.TreeView();
             this.lblWhisper = new System.Windows.Forms.Label();
@@ -81,7 +83,8 @@
             // 
             this.menuStrip.BackColor = System.Drawing.Color.Gainsboro;
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.verbindungenToolStripMenuItem});
+            this.verbindungenToolStripMenuItem,
+            this.einstellungenToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
             this.menuStrip.Size = new System.Drawing.Size(784, 24);
@@ -123,6 +126,22 @@
             this.beendenToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.beendenToolStripMenuItem.Text = "Beenden";
             this.beendenToolStripMenuItem.Click += new System.EventHandler(this.beendenToolStripMenuItem_Click);
+            // 
+            // einstellungenToolStripMenuItem
+            // 
+            this.einstellungenToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.benutzernameÄndernToolStripMenuItem});
+            this.einstellungenToolStripMenuItem.Name = "einstellungenToolStripMenuItem";
+            this.einstellungenToolStripMenuItem.Size = new System.Drawing.Size(90, 20);
+            this.einstellungenToolStripMenuItem.Text = "Einstellungen";
+            // 
+            // benutzernameÄndernToolStripMenuItem
+            // 
+            this.benutzernameÄndernToolStripMenuItem.BackColor = System.Drawing.Color.White;
+            this.benutzernameÄndernToolStripMenuItem.Name = "benutzernameÄndernToolStripMenuItem";
+            this.benutzernameÄndernToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.benutzernameÄndernToolStripMenuItem.Text = "Benutzername ändern";
+            this.benutzernameÄndernToolStripMenuItem.Click += new System.EventHandler(this.benutzernameÄndernToolStripMenuItem_Click);
             // 
             // splitContainerClient
             // 
@@ -235,6 +254,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Chat-Client";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.splitContainerClient.Panel1.ResumeLayout(false);
@@ -264,6 +284,8 @@
         private System.Windows.Forms.TextBox txtBoxWhisperUsername;
         private System.Windows.Forms.Timer tmrUpdate;
         private System.ComponentModel.BackgroundWorker bckGrWorkerTCP;
+        private System.Windows.Forms.ToolStripMenuItem einstellungenToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem benutzernameÄndernToolStripMenuItem;
     }
 }
 

@@ -38,24 +38,24 @@ namespace ChatClient.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Localhost")]
-        public string StandardAddress {
+        public string Address {
             get {
-                return ((string)(this["StandardAddress"]));
+                return ((string)(this["Address"]));
             }
             set {
-                this["StandardAddress"] = value;
+                this["Address"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1234")]
-        public string StandardPort {
+        [global::System.Configuration.DefaultSettingValueAttribute("12345")]
+        public string Port {
             get {
-                return ((string)(this["StandardPort"]));
+                return ((string)(this["Port"]));
             }
             set {
-                this["StandardPort"] = value;
+                this["Port"] = value;
             }
         }
     }
