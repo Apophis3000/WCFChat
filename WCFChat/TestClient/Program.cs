@@ -39,6 +39,11 @@ namespace TestClient
             PrintMessages(service.RetrieveMessages(p1.UserName).ToList());
             PrintMessages(service.RetrieveMessages(p2.UserName).ToList());
 
+            var users = service.GetUsers();
+
+            bool t = service.HasSwitchedChannel(p1.UserName);
+            bool t2 = service.HasSwitchedChannel(p2.UserName);
+
             Console.ReadLine();            
         }
     }

@@ -16,7 +16,7 @@ namespace WCFChat
         bool Connect(string p);
 
         [OperationContract]
-        void Disconnect(string p);
+        bool Disconnect(string p);
 
         [OperationContract]
         void Say(string user, string message);
@@ -32,5 +32,11 @@ namespace WCFChat
 
         [OperationContract]
         List<string> GetChannels();
+
+        [OperationContract]
+        List<Person> GetUsers();
+
+        [OperationContract]
+        bool HasSwitchedChannel(string user);
     }
 }

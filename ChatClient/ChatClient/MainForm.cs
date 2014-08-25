@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Windows.Forms;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,13 +15,12 @@ using System.Windows.Forms;
 
 using ChatClient.Dialog;
 using ChatClient.ServerContent;
-using WcfService;
 
 namespace ChatClient
 {
     public partial class MainForm : Form
     {
-        private TestServer.TestService testService = new TestServer.TestService();
+        ChatService.ChatServiceClient testService = new ChatService.ChatServiceClient();
 
         private enum MessageType
         {
@@ -165,12 +165,12 @@ namespace ChatClient
                 Channel selectedChannel = (Channel)e.Node.Tag;
 
                 //Dienst - SwitchChannel();
-                string systemText = serverViewer.SwitchChannel(selectedChannel.Id, myUsername, testService);
+                serverViewer.SwitchChannel(selectedChannel.Id, myUsername, testService);
 
-                if (!String.IsNullOrEmpty(systemText))
+                /*if (!String.IsNullOrEmpty(systemText))
                 {
                     this.WriteNewMessageToChat(systemText, MessageType.System, "System");
-                }
+                }*/
             }
             else if (e.Node.Level >= 2)
             {
@@ -228,7 +228,7 @@ namespace ChatClient
             }
 
             //Dienst - GetMessages();
-            List<TestServer.Message> messages = testService.GetMessages(myUsername);
+            List<TestServer.Message> messages = testService.RetrieveMessages(myUsername);
 
             if (messages != null)
             {

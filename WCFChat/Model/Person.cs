@@ -19,6 +19,9 @@ namespace Model
         [DataMember]
         public string CurrentChannelName { get; set; }
 
+        [DataMember]
+        public string LastChannelName { get; set; }
+
         public Person()
         {
             UserName = string.Empty;

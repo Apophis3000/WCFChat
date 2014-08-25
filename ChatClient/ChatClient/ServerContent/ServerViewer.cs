@@ -13,7 +13,7 @@ namespace ChatClient.ServerContent
         List<Channel> serverChannels;
         private TreeView treeViewServer;
 
-        public ServerViewer(TreeView treeViewServer, TestServer.TestService testService)
+        public ServerViewer(TreeView treeViewServer, ChatService.ChatServiceClient testService)
         {
             this.treeViewServer = treeViewServer;
 
@@ -43,16 +43,16 @@ namespace ChatClient.ServerContent
 
             return treeViewServer;
         }
-        public string SwitchChannel(int channelId, string username, TestServer.TestService testService)
+        public void SwitchChannel(int channelId, string username, ChatService.ChatServiceClient testService)
         {
             //Dienst - SwitchChannel();
-            return testService.SwitchChannel(channelId, username);
+            testService.SwitchChannel(username, channelId.ToString());
         }
 
-        private void BuildServerStructure(TestServer.TestService testService)
+        private void BuildServerStructure(ChatService.ChatServiceClient testService)
         {
             //Dienst - GetCountChannels();
-            int countChannels = testService.GetCountChannels();
+            int countChannels = testService.GetChannels().Count();
 
             serverChannels = new List<Channel>();
 
