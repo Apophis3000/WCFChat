@@ -23,9 +23,9 @@ namespace WCFChat
             return engine.Connect(p);
         }
 
-        void IChatService.Disconnect(string p)
+        bool IChatService.Disconnect(string p)
         {
-            engine.Disconnect(p); 
+            return engine.Disconnect(p); 
         }
 
 
@@ -52,6 +52,26 @@ namespace WCFChat
         List<string> IChatService.GetChannels()
         {
             return engine.GetChannelNames();
+        }
+
+        List<Person> IChatService.GetUsers()
+        {
+            List<Person> users = new List<Person>();
+
+            foreach (var channel in engine.GetChannels())
+            {
+                foreach(var user in channel.Value)
+                {
+                    users.Add(user);
+                }              
+            }
+
+            return users;
+        }
+
+        bool IChatService.HasSwitchedChannel(string user)
+        {
+            return engine.HasSwitchedChannel(user);
         }
     }
 }

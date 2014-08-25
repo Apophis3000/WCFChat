@@ -23,6 +23,11 @@ namespace WCFChat
             channels.Add("Channel3", new List<Person>());
         }
 
+        public Dictionary<string, List<Person>> GetChannels()
+        {
+            return channels; 
+        }
+
         public bool Connect(string user)
         {
             if (channels.Any(x => x.Value.Find(y => y.UserName == user) != null))
@@ -32,29 +37,30 @@ namespace WCFChat
             }
 
             Person p = new Person() { UserName = user, IsConnected = true };
-            messages.Add(user, new List<Message>());
-
-            //channels["Lobby"].Add(p);
-            
+            messages.Add(user, new List<Message>());            
             
             messages[user].Add(new Message(user, "Welcome to the chat!", EMessageType.System));
             JoinChannel(p, "Lobby");
             return true;
         }
 
-        public void Disconnect(string user)
+        public bool Disconnect(string user)
         {
+            bool success = false;
+
             foreach (var channel in channels)
             {
                 Person leaver = channel.Value.Find(x => x.UserName == user);
 
                 if (leaver != null)
                 {
-                    channel.Value.Remove(leaver); 
+                    channel.Value.Remove(leaver);
+                    success = true;
                 }
             }
 
             messages.Remove(user);
+            return success;
         }
 
         public void Say(string sender, string message)
@@ -112,6 +118,21 @@ namespace WCFChat
             }
         }
 
+        public bool HasSwitchedChannel(string user)
+        {
+            foreach (var c in channels)
+            {
+                Person p = c.Value.Find(x => x.UserName == user);
+
+                if (p != null)
+                {
+                    return p.LastChannelName != p.CurrentChannelName;
+                }
+            }
+
+            return false;
+        }
+
         private void JoinChannel(Person p, string channelName)
         {
             foreach (var c in channels)
@@ -119,6 +140,13 @@ namespace WCFChat
                 if (c.Key == channelName)
                 {
                     c.Value.Add(p);
+
+                    if (p.LastChannelName == null)
+                    {
+                        p.LastChannelName = channelName;
+                    }
+
+                    p.CurrentChannelName = channelName;
 
                     foreach (var u in c.Value)
                     {
@@ -142,6 +170,7 @@ namespace WCFChat
                 if (p != null)
                 {
                     c.Value.Remove(p);
+                    p.LastChannelName = c.Key;
 
                     foreach (var u in c.Value)
                     {

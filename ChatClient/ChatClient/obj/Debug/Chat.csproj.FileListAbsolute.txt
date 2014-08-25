@@ -12,6 +12,7 @@ C:\Users\Cedric\Documents\Visual Studio 2013\Projects\ChatClient\ChatClient\obj\
 C:\Users\Cedric\Documents\Visual Studio 2013\Projects\ChatClient\ChatClient\obj\Debug\ChatClient.MainForm.resources
 C:\Users\Cedric\Documents\Visual Studio 2013\Projects\ChatClient\ChatClient\bin\Debug\TestServer.exe
 C:\Users\Cedric\Documents\Visual Studio 2013\Projects\ChatClient\ChatClient\bin\Debug\TestServer.pdb
+<<<<<<< HEAD
 C:\Users\Cedric\Documents\Visual Studio 2013\Projects\WCFChat\ChatClient\ChatClient\bin\Debug\ChatClient.exe.config
 C:\Users\Cedric\Documents\Visual Studio 2013\Projects\WCFChat\ChatClient\ChatClient\obj\Debug\ChatClient.exe
 C:\Users\Cedric\Documents\Visual Studio 2013\Projects\WCFChat\ChatClient\ChatClient\obj\Debug\ChatClient.pdb
@@ -26,3 +27,14 @@ C:\Users\Cedric\Documents\Visual Studio 2013\Projects\WCFChat\ChatClient\ChatCli
 C:\Users\Cedric\Documents\Visual Studio 2013\Projects\WCFChat\ChatClient\ChatClient\bin\Debug\TestServer.pdb
 C:\Users\Cedric\Documents\Visual Studio 2013\Projects\WCFChat\ChatClient\ChatClient\bin\Debug\Model.dll
 C:\Users\Cedric\Documents\Visual Studio 2013\Projects\WCFChat\ChatClient\ChatClient\bin\Debug\Model.pdb
+=======
+C:\Projects\WCFChat\ChatClient\ChatClient\bin\Debug\ChatClient.exe.config
+C:\Projects\WCFChat\ChatClient\ChatClient\obj\Debug\ChatClient.exe
+C:\Projects\WCFChat\ChatClient\ChatClient\obj\Debug\ChatClient.pdb
+C:\Projects\WCFChat\ChatClient\ChatClient\obj\Debug\Chat.csprojResolveAssemblyReference.cache
+C:\Projects\WCFChat\ChatClient\ChatClient\obj\Debug\ChatClient.Dialog.ConnectionForm.resources
+C:\Projects\WCFChat\ChatClient\ChatClient\obj\Debug\ChatClient.MainForm.resources
+C:\Projects\WCFChat\ChatClient\ChatClient\obj\Debug\ChatClient.Properties.Resources.resources
+C:\Projects\WCFChat\ChatClient\ChatClient\obj\Debug\Chat.csproj.GenerateResource.Cache
+>>>>>>> a11fdef056700b6a1724c8e9da3eb65a29a76792
+C:\Users\Cedric\Documents\Visual Studio 2013\Projects\WCFChat\ChatClient\ChatClient\obj\Debug\ChatClient.Dialog.SettingsForm.resources

@@ -54,6 +54,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="Properties\DataSources\Model.Message.datasource" />
+    <None Include="Properties\DataSources\Model.Person.datasource" />
     <None Include="Service References\ChatService\Arrays.xsd">
       <SubType>Designer</SubType>
     </None>

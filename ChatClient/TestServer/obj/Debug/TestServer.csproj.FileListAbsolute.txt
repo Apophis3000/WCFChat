@@ -4,3 +4,15 @@ C:\Users\Cedric\Documents\Visual Studio 2013\Projects\ChatClient\TestServer\bin\
 C:\Users\Cedric\Documents\Visual Studio 2013\Projects\ChatClient\TestServer\bin\Debug\TestServer.pdb
 C:\Users\Cedric\Documents\Visual Studio 2013\Projects\ChatClient\TestServer\obj\Debug\TestServer.exe
 C:\Users\Cedric\Documents\Visual Studio 2013\Projects\ChatClient\TestServer\obj\Debug\TestServer.pdb
+C:\Projects\WCFChat\ChatClient\TestServer\bin\Debug\TestServer.exe.config
+C:\Projects\WCFChat\ChatClient\TestServer\bin\Debug\TestServer.exe
+C:\Projects\WCFChat\ChatClient\TestServer\bin\Debug\TestServer.pdb
+C:\Projects\WCFChat\ChatClient\TestServer\obj\Debug\TestServer.csprojResolveAssemblyReference.cache
+C:\Projects\WCFChat\ChatClient\TestServer\obj\Debug\TestServer.exe
+C:\Projects\WCFChat\ChatClient\TestServer\obj\Debug\TestServer.pdb
+C:\Users\Cedric\Documents\Visual Studio 2013\Projects\WCFChat\ChatClient\TestServer\bin\Debug\TestServer.exe.config
+C:\Users\Cedric\Documents\Visual Studio 2013\Projects\WCFChat\ChatClient\TestServer\obj\Debug\TestServer.exe
+C:\Users\Cedric\Documents\Visual Studio 2013\Projects\WCFChat\ChatClient\TestServer\obj\Debug\TestServer.pdb
+C:\Users\Cedric\Documents\Visual Studio 2013\Projects\WCFChat\ChatClient\TestServer\bin\Debug\TestServer.exe
+C:\Users\Cedric\Documents\Visual Studio 2013\Projects\WCFChat\ChatClient\TestServer\bin\Debug\TestServer.pdb
+C:\Users\Cedric\Documents\Visual Studio 2013\Projects\WCFChat\ChatClient\TestServer\obj\Debug\TestServer.csprojResolveAssemblyReference.cache

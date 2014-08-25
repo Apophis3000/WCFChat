@@ -46,9 +46,16 @@ namespace ChatClient.ServerContent
         }
         public string SwitchChannel(int channelId, string username, IChatService remoteProxy)
         {
-            remoteProxy.SwitchChannel(username, serverChannels[channelId].Name);
+            try
+            {
+                remoteProxy.SwitchChannel(username, serverChannels[channelId].Name);
 
-            return "Du bist dem Channel " + serverChannels[channelId].Name + " beigetreten";
+                return "Du bist dem Channel " + serverChannels[channelId].Name + " beigetreten";
+            }
+            catch
+            {
+                return "";
+            }
         }
 
         private void BuildServerStructure(IChatService remoteProxy)
