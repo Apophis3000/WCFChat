@@ -44,7 +44,11 @@ namespace TestClient
             bool t = service.HasSwitchedChannel(p1.UserName);
             bool t2 = service.HasSwitchedChannel(p2.UserName);
 
-            Console.ReadLine();            
+            Console.ReadLine();
+
+            service.Whisper(p1.UserName, p1.UserName, "Hallo selbst!");
+
+            Console.ReadLine();
         }
     }
 }
