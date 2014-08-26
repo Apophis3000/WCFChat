@@ -40,7 +40,7 @@
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(87, 27);
             this.btnCancel.TabIndex = 6;
-            this.btnCancel.Text = "Zurück";
+            this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
@@ -56,7 +56,7 @@
             // 
             // txtBoxName
             // 
-            this.txtBoxName.Location = new System.Drawing.Point(72, 57);
+            this.txtBoxName.Location = new System.Drawing.Point(86, 57);
             this.txtBoxName.Name = "txtBoxName";
             this.txtBoxName.Size = new System.Drawing.Size(174, 21);
             this.txtBoxName.TabIndex = 0;
@@ -66,11 +66,11 @@
             this.lblName.AutoSize = true;
             this.lblName.Location = new System.Drawing.Point(12, 60);
             this.lblName.Name = "lblName";
-            this.lblName.Size = new System.Drawing.Size(44, 15);
+            this.lblName.Size = new System.Drawing.Size(68, 15);
             this.lblName.TabIndex = 7;
-            this.lblName.Text = "Name:";
+            this.lblName.Text = "Username:";
             // 
-            // ConnectionForm
+            // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -83,10 +83,10 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "ConnectionForm";
+            this.Name = "SettingsForm";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Verbinden";
+            this.Text = "Change Username";
             this.ResumeLayout(false);
             this.PerformLayout();
 

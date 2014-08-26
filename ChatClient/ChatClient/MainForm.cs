@@ -45,18 +45,11 @@ namespace ChatClient
             Init();
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-            settingsForm = new SettingsForm();
-
-            me = new Person();
-            me.UserName = string.Empty;
-        }
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (isConnected)
             {
-                DialogResult result = MessageBox.Show("Sie sind noch verbunden.\r\n\r\nWollen Sie die Anwendung wirklich beenden?", "Beenden", MessageBoxButtons.YesNo);
+                DialogResult result = MessageBox.Show("You are still connected!\r\n\r\nDo you want to continue?", "Close", MessageBoxButtons.YesNo);
 
                 if (result == DialogResult.No)
                 {
@@ -78,6 +71,8 @@ namespace ChatClient
             if (isConnected)
             {
                 serverViewer = new ServerViewer(treeViewServer, remoteProxy);
+
+                treeViewServer = serverViewer.Update(remoteProxy);
 
                 tmrUpdate.Start();
             }
@@ -108,7 +103,7 @@ namespace ChatClient
         }
         private void txtBoxChatEnter_MouseClick(object sender, MouseEventArgs e)
         {
-            if (txtBoxChatEnter.Text == "Text hier eingeben...")
+            if (txtBoxChatEnter.Text == "Enter text here...")
             {
                 txtBoxChatEnter.Text = string.Empty;
             }
@@ -181,11 +176,11 @@ namespace ChatClient
                 Channel selectedChannel = (Channel)e.Node.Tag;
 
                 //Dienst - SwitchChannel();
-                string systemText = serverViewer.SwitchChannel(selectedChannel.Id, me.UserName, remoteProxy);
+                bool switchedCorrect = serverViewer.SwitchChannel(selectedChannel.Id, me.UserName, remoteProxy);
 
-                if (!String.IsNullOrEmpty(systemText))
+                if (!switchedCorrect)
                 {
-                    this.WriteNewMessageToChat(systemText, ClientMessageType.System, "System");
+                    this.WriteNewMessageToChat("You could not switch the channel!", ClientMessageType.System, "System");
                 }
             }
             else if (e.Node.Level >= 2)
@@ -283,53 +278,56 @@ namespace ChatClient
             cboBoxMessageType.SelectedItem = cboBoxMessageType.Items[0];
 
             chatExtFunctions = new ChatExtendedFunctions();
+
+            settingsForm = new SettingsForm();
+
+            me = new Person();
+            me.UserName = string.Empty;
         }
         private bool Connect(IPAddress address, int port)
         {
-            //if (isConnected)
-            //{
-            //    this.Disconnect();
-
-            //    isConnected = false;
-            //}
-
             try
             {
+                this.Cursor = Cursors.WaitCursor;
+
                 if (address == null)
                 {
-                    MessageBox.Show("Es konnte keine Verbindung hergestellt werden.\r\n\r\nDie angegebene Adresse ist ungültig.", "Verbindungsfehler", MessageBoxButtons.OK);
+                    MessageBox.Show("Connection failed!\r\n\r\nThe given address is incorrect!", "Connection error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                     return false;
                 }
 
-                tcpListener = new TcpListener(address, port);
-                tcpListener.Start();
-
-                this.bckGrWorkerTCP.RunWorkerAsync(tcpListener);
+                //tcpListener = new TcpListener(address, port);
+                //tcpListener.Start();
+                //this.bckGrWorkerTCP.RunWorkerAsync(tcpListener);
 
                 Random random = new Random();
-                me.UserName = (!String.IsNullOrEmpty(Properties.Settings.Default.Username)) ? Properties.Settings.Default.Username : "Benutzer_" + (random.Next(0, 999).ToString());
+                me.UserName = (!String.IsNullOrEmpty(Properties.Settings.Default.Username)) ? Properties.Settings.Default.Username : "user_" + (random.Next(0, 999).ToString());
 
                 //Verbindung zum Server aufbauen
                 if (remoteProxy.Connect(me.UserName))
                 {
-                    this.WriteNewMessageToChat("### Willkommen auf unserem Chatserver ###", ClientMessageType.System, "System");
-
                     //Chat-Komponenten enablen
                     this.ChatEnable(true);
+
+                    this.Cursor = Cursors.Default;
 
                     return true;
                 }
                 else
                 {
-                    this.WriteNewMessageToChat("Verbindung zum Serverdienst konnte nicht hergestellt werden.", ClientMessageType.System, "System");
+                    this.WriteNewMessageToChat("You could not connect to the server.", ClientMessageType.System, "System");
+
+                    this.Cursor = Cursors.Default;
 
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Es konnte keine Verbindung hergestellt werden.\r\n\r\n" + ex.Message, "Verbindungsfehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Connection failed!\r\n\r\n" + ex.Message, "Connection error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                this.Cursor = Cursors.Default;
 
                 return false;
             }
@@ -341,15 +339,18 @@ namespace ChatClient
 
             if (serviceDisconnected)
             {
+                //Aufhören, Nachrichten vom Server abzufragen
+                tmrUpdate.Stop();
+
+                this.WriteNewMessageToChat("You are disconnected.", ClientMessageType.System, "System");
+
                 //Verbindung trennen
-                bckGrWorkerTCP.CancelAsync();
+                //bckGrWorkerTCP.CancelAsync();
 
                 //Chat-Komponenten disablen
                 this.ChatEnable(false);
 
                 treeViewServer.Nodes.Clear();
-
-                this.WriteNewMessageToChat("Verbindung beendet.", ClientMessageType.System, "System");
 
                 isConnected = false;
             }
@@ -370,13 +371,13 @@ namespace ChatClient
             }
             else if (chatType == ClientMessageType.WhisperToMe)
             {
-                newChatLine = "[" + dateFormatted + "] " + fromUsername + " (flüstert dir): " + newMessage + "\r\n";
+                newChatLine = "[" + dateFormatted + "] " + fromUsername + " (whispers to you): " + newMessage + "\r\n";
 
                 chatExtFunctions.AddTextToChat(ref rtxtBoxChat, newChatLine, Color.Green);
             }
             else if (chatType == ClientMessageType.WhisperFromMe)
             {
-                newChatLine = "[" + dateFormatted + "] Du flüsterst " + ToUsername + ": " + newMessage + "\r\n";
+                newChatLine = "[" + dateFormatted + "] You whisper " + ToUsername + ": " + newMessage + "\r\n";
 
                 chatExtFunctions.AddTextToChat(ref rtxtBoxChat, newChatLine, Color.Green);
             }
@@ -403,7 +404,7 @@ namespace ChatClient
                 }
                 else
                 {
-                    MessageBox.Show("Sie haben keinen Benutzer angegeben zum Anflüstern.", "Fehler", MessageBoxButtons.OK);
+                    this.WriteNewMessageToChat("A user for the whisper is missing.", ClientMessageType.System, "System");
                 }
             }
         }
@@ -416,6 +417,9 @@ namespace ChatClient
                 rtxtBoxChat.Enabled = true;
                 cboBoxMessageType.Enabled = true;
                 btnChatEnter.Enabled = true;
+
+                verbindenToolStripMenuItem.Enabled = false;
+                einstellungenToolStripMenuItem.Enabled = false;
             }
             else
             {
@@ -424,6 +428,9 @@ namespace ChatClient
                 rtxtBoxChat.Enabled = false;
                 cboBoxMessageType.Enabled = false;
                 btnChatEnter.Enabled = false;
+
+                verbindenToolStripMenuItem.Enabled = true;
+                einstellungenToolStripMenuItem.Enabled = true;
             }
         }
         private void SwitchChatType()
@@ -442,7 +449,7 @@ namespace ChatClient
             else if (cboBoxMessageType.SelectedItem == cboBoxMessageType.Items[1])
             {
                 //Flüstern-Chat
-                txtBoxWhisperUsername.Text = "<Benutzer>";
+                txtBoxWhisperUsername.Text = "<user>";
                 txtBoxWhisperUsername.Visible = true;
                 lblWhisper.Visible = true;
 

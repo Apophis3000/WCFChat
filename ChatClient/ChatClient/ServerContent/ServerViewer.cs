@@ -53,17 +53,17 @@ namespace ChatClient.ServerContent
 
             return treeViewServer;
         }
-        public string SwitchChannel(int channelId, string username, IChatService remoteProxy)
+        public bool SwitchChannel(int channelId, string username, IChatService remoteProxy)
         {
             try
             {
                 remoteProxy.SwitchChannel(username, serverChannels[channelId].Name);
 
-                return "Du bist dem Channel " + serverChannels[channelId].Name + " beigetreten";
+                return true;
             }
             catch
             {
-                return "";
+                return false;
             }
         }
 

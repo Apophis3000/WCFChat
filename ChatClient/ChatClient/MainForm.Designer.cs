@@ -63,7 +63,7 @@
             this.txtBoxChatEnter.Name = "txtBoxChatEnter";
             this.txtBoxChatEnter.Size = new System.Drawing.Size(362, 21);
             this.txtBoxChatEnter.TabIndex = 2;
-            this.txtBoxChatEnter.Text = "Text hier eingeben...";
+            this.txtBoxChatEnter.Text = "Enter text here...";
             this.txtBoxChatEnter.MouseClick += new System.Windows.Forms.MouseEventHandler(this.txtBoxChatEnter_MouseClick);
             this.txtBoxChatEnter.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtBoxChatEnter_KeyDown);
             this.txtBoxChatEnter.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtBoxChatEnter_KeyPress);
@@ -75,7 +75,7 @@
             this.btnChatEnter.Name = "btnChatEnter";
             this.btnChatEnter.Size = new System.Drawing.Size(89, 27);
             this.btnChatEnter.TabIndex = 0;
-            this.btnChatEnter.Text = "Eingabe";
+            this.btnChatEnter.Text = "Enter";
             this.btnChatEnter.UseVisualStyleBackColor = true;
             this.btnChatEnter.Click += new System.EventHandler(this.btnChatEnter_Click);
             // 
@@ -98,16 +98,16 @@
             this.verbindungTrennenToolStripMenuItem,
             this.beendenToolStripMenuItem});
             this.verbindungenToolStripMenuItem.Name = "verbindungenToolStripMenuItem";
-            this.verbindungenToolStripMenuItem.Size = new System.Drawing.Size(94, 20);
-            this.verbindungenToolStripMenuItem.Text = "Verbindungen";
+            this.verbindungenToolStripMenuItem.Size = new System.Drawing.Size(81, 20);
+            this.verbindungenToolStripMenuItem.Text = "Connection";
             // 
             // verbindenToolStripMenuItem
             // 
             this.verbindenToolStripMenuItem.BackColor = System.Drawing.Color.White;
             this.verbindenToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("verbindenToolStripMenuItem.Image")));
             this.verbindenToolStripMenuItem.Name = "verbindenToolStripMenuItem";
-            this.verbindenToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.verbindenToolStripMenuItem.Text = "Verbinden";
+            this.verbindenToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.verbindenToolStripMenuItem.Text = "Connect";
             this.verbindenToolStripMenuItem.Click += new System.EventHandler(this.verbindenToolStripMenuItem_Click);
             // 
             // verbindungTrennenToolStripMenuItem
@@ -115,16 +115,16 @@
             this.verbindungTrennenToolStripMenuItem.BackColor = System.Drawing.Color.White;
             this.verbindungTrennenToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("verbindungTrennenToolStripMenuItem.Image")));
             this.verbindungTrennenToolStripMenuItem.Name = "verbindungTrennenToolStripMenuItem";
-            this.verbindungTrennenToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.verbindungTrennenToolStripMenuItem.Text = "Verbindung trennen";
+            this.verbindungTrennenToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.verbindungTrennenToolStripMenuItem.Text = "Disconnect";
             this.verbindungTrennenToolStripMenuItem.Click += new System.EventHandler(this.verbindungTrennenToolStripMenuItem_Click);
             // 
             // beendenToolStripMenuItem
             // 
             this.beendenToolStripMenuItem.BackColor = System.Drawing.Color.Gainsboro;
             this.beendenToolStripMenuItem.Name = "beendenToolStripMenuItem";
-            this.beendenToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.beendenToolStripMenuItem.Text = "Beenden";
+            this.beendenToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.beendenToolStripMenuItem.Text = "Close";
             this.beendenToolStripMenuItem.Click += new System.EventHandler(this.beendenToolStripMenuItem_Click);
             // 
             // einstellungenToolStripMenuItem
@@ -132,15 +132,15 @@
             this.einstellungenToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.benutzernameÄndernToolStripMenuItem});
             this.einstellungenToolStripMenuItem.Name = "einstellungenToolStripMenuItem";
-            this.einstellungenToolStripMenuItem.Size = new System.Drawing.Size(90, 20);
-            this.einstellungenToolStripMenuItem.Text = "Einstellungen";
+            this.einstellungenToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.einstellungenToolStripMenuItem.Text = "Settings";
             // 
             // benutzernameÄndernToolStripMenuItem
             // 
             this.benutzernameÄndernToolStripMenuItem.BackColor = System.Drawing.Color.White;
             this.benutzernameÄndernToolStripMenuItem.Name = "benutzernameÄndernToolStripMenuItem";
-            this.benutzernameÄndernToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
-            this.benutzernameÄndernToolStripMenuItem.Text = "Benutzername ändern";
+            this.benutzernameÄndernToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.benutzernameÄndernToolStripMenuItem.Text = "Change Username";
             this.benutzernameÄndernToolStripMenuItem.Click += new System.EventHandler(this.benutzernameÄndernToolStripMenuItem_Click);
             // 
             // splitContainerClient
@@ -198,7 +198,7 @@
             this.txtBoxWhisperUsername.Name = "txtBoxWhisperUsername";
             this.txtBoxWhisperUsername.Size = new System.Drawing.Size(100, 21);
             this.txtBoxWhisperUsername.TabIndex = 1;
-            this.txtBoxWhisperUsername.Text = "<Benutzer>";
+            this.txtBoxWhisperUsername.Text = "<user>";
             this.txtBoxWhisperUsername.Visible = false;
             this.txtBoxWhisperUsername.MouseClick += new System.Windows.Forms.MouseEventHandler(this.txtBoxWhisperUsername_MouseClick);
             // 
@@ -208,8 +208,8 @@
             this.cboBoxMessageType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboBoxMessageType.FormattingEnabled = true;
             this.cboBoxMessageType.Items.AddRange(new object[] {
-            "Sagen",
-            "Flüstern"});
+            "Say",
+            "Whisper"});
             this.cboBoxMessageType.Location = new System.Drawing.Point(3, 486);
             this.cboBoxMessageType.MaxDropDownItems = 2;
             this.cboBoxMessageType.Name = "cboBoxMessageType";
@@ -252,9 +252,8 @@
             this.MainMenuStrip = this.menuStrip;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Chat-Client";
+            this.Text = "Direct Connect";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
-            this.Load += new System.EventHandler(this.MainForm_Load);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.splitContainerClient.Panel1.ResumeLayout(false);
