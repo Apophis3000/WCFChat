@@ -39,6 +39,7 @@ namespace ChatClient
         private bool isConnected = false;
         private ChatExtendedFunctions chatExtFunctions;
         private ServerViewer serverViewer;
+        private bool isWhisper = false;
 
         public MainForm()
         {
@@ -79,7 +80,7 @@ namespace ChatClient
             {
                 serverViewer = new ServerViewer(treeViewServer, remoteProxy);
 
-                treeViewServer = serverViewer.Update(remoteProxy);
+                treeViewServer = serverViewer.Update(remoteProxy, me);
 
                 tmrUpdate.Start();
             }
@@ -240,38 +241,45 @@ namespace ChatClient
         }
         private void tmrUpdate_Tick(object sender, EventArgs e)
         {
-            if (this.AnyUserSwitched())
+            try
             {
-                treeViewServer = serverViewer.Update(remoteProxy);
-            }
-
-            Model.Message[] messages = remoteProxy.RetrieveMessages(me.UserName);
-
-            if (messages != null && messages.Length > 0 && messages[0] != null)
-            {
-                foreach (Model.Message message in messages)
+                if (this.AnyUserSwitched())
                 {
-                    if (message.MessageType == EMessageType.Say)
-                    {
-                        this.WriteNewMessageToChat(message.Text, ClientMessageType.Say, message.Author, message.Recipient);
-                    }
-                    else if (message.MessageType == EMessageType.Whisper)
-                    {
-                        if (me.UserName == message.Author)
-                        {
-                            this.WriteNewMessageToChat(message.Text, ClientMessageType.WhisperFromMe, message.Author, message.Recipient);
-                        }
+                    treeViewServer = serverViewer.Update(remoteProxy, me);
+                }
 
-                        if (me.UserName == message.Recipient)
-                        {
-                            this.WriteNewMessageToChat(message.Text, ClientMessageType.WhisperToMe, message.Author, message.Recipient);
-                        }
-                    }
-                    else
+                Model.Message[] messages = remoteProxy.RetrieveMessages(me.UserName);
+
+                if (messages != null && messages.Length > 0 && messages[0] != null)
+                {
+                    foreach (Model.Message message in messages)
                     {
-                        this.WriteNewMessageToChat(message.Text, ClientMessageType.System, message.Author, message.Recipient);
+                        if (message.MessageType == EMessageType.Say)
+                        {
+                            this.WriteNewMessageToChat(message.Text, ClientMessageType.Say, message.Author, message.Recipient);
+                        }
+                        else if (message.MessageType == EMessageType.Whisper)
+                        {
+                            if (me.UserName == message.Author)
+                            {
+                                this.WriteNewMessageToChat(message.Text, ClientMessageType.WhisperFromMe, message.Author, message.Recipient);
+                            }
+
+                            if (me.UserName == message.Recipient)
+                            {
+                                this.WriteNewMessageToChat(message.Text, ClientMessageType.WhisperToMe, message.Author, message.Recipient);
+                            }
+                        }
+                        else
+                        {
+                            this.WriteNewMessageToChat(message.Text, ClientMessageType.System, message.Author, message.Recipient);
+                        }
                     }
                 }
+            }
+            catch
+            {
+                this.Disconnect(true);
             }
         }
 
@@ -339,7 +347,7 @@ namespace ChatClient
                 return false;
             }
         }
-        private void Disconnect()
+        private void Disconnect(bool lostConnection = false)
         {
             //Verbindung zum Server trennen
             bool serviceDisconnected = remoteProxy.Disconnect(me.UserName);
@@ -349,7 +357,10 @@ namespace ChatClient
                 //Aufhören, Nachrichten vom Server abzufragen
                 tmrUpdate.Stop();
 
-                this.WriteNewMessageToChat("You are disconnected.", ClientMessageType.System, "System");
+                if (!lostConnection)
+                    this.WriteNewMessageToChat("You are disconnected.", ClientMessageType.System, "System");
+                else
+                    this.WriteNewMessageToChat("You lost the connection to the server.", ClientMessageType.System, "System");
 
                 //Verbindung trennen
                 //bckGrWorkerTCP.CancelAsync();
@@ -444,7 +455,7 @@ namespace ChatClient
         {
             int push = 108;
 
-            if (cboBoxMessageType.SelectedItem == cboBoxMessageType.Items[0])
+            if (isWhisper && cboBoxMessageType.SelectedItem == cboBoxMessageType.Items[0])
             {
                 //Sagen-Chat
                 txtBoxChatEnter.Width += push;
@@ -452,8 +463,10 @@ namespace ChatClient
 
                 txtBoxWhisperUsername.Visible = false;
                 lblWhisper.Visible = false;
+
+                isWhisper = false;
             }
-            else if (cboBoxMessageType.SelectedItem == cboBoxMessageType.Items[1])
+            else if (!isWhisper && cboBoxMessageType.SelectedItem == cboBoxMessageType.Items[1])
             {
                 //Flüstern-Chat
                 txtBoxWhisperUsername.Text = "<user>";
@@ -464,6 +477,8 @@ namespace ChatClient
                 txtBoxChatEnter.Location = new Point(185, 486);
 
                 txtBoxWhisperUsername.Focus();
+
+                isWhisper = true;
             }
         }
         private TcpClient RunTCP(BackgroundWorker bcckGrWorker, TcpListener tcpListener)

@@ -25,7 +25,7 @@ namespace ChatClient.ServerContent
             this.BuildServerStructure(remoteProxy);
         }
 
-        public TreeView Update(IChatService remoteProxy)
+        public TreeView Update(IChatService remoteProxy, Person me)
         {
             Person[] allUsers = remoteProxy.GetUsers();
 
@@ -44,7 +44,7 @@ namespace ChatClient.ServerContent
                     }
                 }
 
-                UpdateUsersInChannel(serverChannel.Id, usersInChannel);
+                UpdateUsersInChannel(serverChannel.Id, usersInChannel, me);
                 usersInChannel.Clear();
             }
 
@@ -94,7 +94,7 @@ namespace ChatClient.ServerContent
 
             this.treeViewServer.Nodes.Add(rootNode);
         }
-        private void UpdateUsersInChannel(int channelId, List<string> users)
+        private void UpdateUsersInChannel(int channelId, List<string> users, Person me)
         {
             Channel tempChannel = (Channel)treeViewServer.Nodes[0].Nodes[channelId].Tag;
             tempChannel.ContainingUsers = users;
@@ -107,6 +107,11 @@ namespace ChatClient.ServerContent
             {
                 treeViewServer.Nodes[0].Nodes[channelId].Nodes.Add(users[index]);
                 treeViewServer.Nodes[0].Nodes[channelId].Nodes[index].ForeColor = Color.Green;
+
+                if (users[index] == me.UserName)
+                {
+                    treeViewServer.Nodes[0].Nodes[channelId].Nodes[index].NodeFont = new Font(treeViewServer.Font, FontStyle.Bold);
+                }
             }
         }
     }
