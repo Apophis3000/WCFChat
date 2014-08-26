@@ -22,10 +22,10 @@ namespace ChatClient.ServiceReference1 {
         System.Threading.Tasks.Task<bool> ConnectAsync(string p);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatService/Disconnect", ReplyAction="http://tempuri.org/IChatService/DisconnectResponse")]
-        void Disconnect(string p);
+        bool Disconnect(string p);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatService/Disconnect", ReplyAction="http://tempuri.org/IChatService/DisconnectResponse")]
-        System.Threading.Tasks.Task DisconnectAsync(string p);
+        System.Threading.Tasks.Task<bool> DisconnectAsync(string p);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatService/Say", ReplyAction="http://tempuri.org/IChatService/SayResponse")]
         void Say(string user, string message);
@@ -56,6 +56,18 @@ namespace ChatClient.ServiceReference1 {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatService/GetChannels", ReplyAction="http://tempuri.org/IChatService/GetChannelsResponse")]
         System.Threading.Tasks.Task<string[]> GetChannelsAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatService/GetUsers", ReplyAction="http://tempuri.org/IChatService/GetUsersResponse")]
+        Model.Person[] GetUsers();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatService/GetUsers", ReplyAction="http://tempuri.org/IChatService/GetUsersResponse")]
+        System.Threading.Tasks.Task<Model.Person[]> GetUsersAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatService/HasSwitchedChannel", ReplyAction="http://tempuri.org/IChatService/HasSwitchedChannelResponse")]
+        bool HasSwitchedChannel(string user);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatService/HasSwitchedChannel", ReplyAction="http://tempuri.org/IChatService/HasSwitchedChannelResponse")]
+        System.Threading.Tasks.Task<bool> HasSwitchedChannelAsync(string user);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -93,11 +105,11 @@ namespace ChatClient.ServiceReference1 {
             return base.Channel.ConnectAsync(p);
         }
         
-        public void Disconnect(string p) {
-            base.Channel.Disconnect(p);
+        public bool Disconnect(string p) {
+            return base.Channel.Disconnect(p);
         }
         
-        public System.Threading.Tasks.Task DisconnectAsync(string p) {
+        public System.Threading.Tasks.Task<bool> DisconnectAsync(string p) {
             return base.Channel.DisconnectAsync(p);
         }
         
@@ -139,6 +151,22 @@ namespace ChatClient.ServiceReference1 {
         
         public System.Threading.Tasks.Task<string[]> GetChannelsAsync() {
             return base.Channel.GetChannelsAsync();
+        }
+        
+        public Model.Person[] GetUsers() {
+            return base.Channel.GetUsers();
+        }
+        
+        public System.Threading.Tasks.Task<Model.Person[]> GetUsersAsync() {
+            return base.Channel.GetUsersAsync();
+        }
+        
+        public bool HasSwitchedChannel(string user) {
+            return base.Channel.HasSwitchedChannel(user);
+        }
+        
+        public System.Threading.Tasks.Task<bool> HasSwitchedChannelAsync(string user) {
+            return base.Channel.HasSwitchedChannelAsync(user);
         }
     }
 }

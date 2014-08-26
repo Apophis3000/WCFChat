@@ -22,8 +22,6 @@ namespace ChatClient
 {
     public partial class MainForm : Form
     {
-        private TestServer.TestService testService = new TestServer.TestService(); //old
-
         private enum ClientMessageType
         {
             Say,
@@ -240,7 +238,7 @@ namespace ChatClient
         }
         private void tmrUpdate_Tick(object sender, EventArgs e)
         {
-            if (testService.NeedServerViewUpdate()) //Ersetzen??
+            if (this.AnyUserSwitched())
             {
                 treeViewServer = serverViewer.Update(remoteProxy);
             }
@@ -253,23 +251,23 @@ namespace ChatClient
                 {
                     if (message.MessageType == EMessageType.Say)
                     {
-                        this.WriteNewMessageToChat(message.Text, ClientMessageType.Say, message.Author, message.ToUsername);
+                        this.WriteNewMessageToChat(message.Text, ClientMessageType.Say, message.Author, message.Recipient);
                     }
                     else if (message.MessageType == EMessageType.Whisper)
                     {
                         if (me.UserName == message.Author)
                         {
-                            this.WriteNewMessageToChat(message.Text, ClientMessageType.WhisperFromMe, message.Author, message.ToUsername);
+                            this.WriteNewMessageToChat(message.Text, ClientMessageType.WhisperFromMe, message.Author, message.Recipient);
                         }
-                        
-                        if (me.UserName == message.ToUsername)
+
+                        if (me.UserName == message.Recipient)
                         {
-                            this.WriteNewMessageToChat(message.Text, ClientMessageType.WhisperToMe, message.Author, message.ToUsername);
+                            this.WriteNewMessageToChat(message.Text, ClientMessageType.WhisperToMe, message.Author, message.Recipient);
                         }
                     }
                     else
                     {
-                        this.WriteNewMessageToChat(message.Text, ClientMessageType.System, message.Author, message.ToUsername);
+                        this.WriteNewMessageToChat(message.Text, ClientMessageType.System, message.Author, message.Recipient);
                     }
                 }
             }
@@ -339,8 +337,7 @@ namespace ChatClient
         private void Disconnect()
         {
             //Verbindung zum Server trennen
-            bool serviceDisconnected = testService.Disconnect(me.UserName);
-            remoteProxy.Disconnect(me.UserName); //bool-Rückgabe fehlt!!
+            bool serviceDisconnected = remoteProxy.Disconnect(me.UserName);
 
             if (serviceDisconnected)
             {
@@ -493,6 +490,20 @@ namespace ChatClient
             {
                 return IPAddress.Parse(address);
             }
+        }
+        private bool AnyUserSwitched()
+        {
+            Person[] allUsers = remoteProxy.GetUsers();
+
+            foreach (Person user in allUsers)
+            {
+                if (remoteProxy.HasSwitchedChannel(user.UserName))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

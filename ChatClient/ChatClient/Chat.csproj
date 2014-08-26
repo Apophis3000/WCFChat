@@ -34,7 +34,7 @@
   <ItemGroup>
     <Reference Include="Model, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\WCFChat\Model\bin\Debug\Model.dll</HintPath>
+      <HintPath>..\..\WCFChat\Model\obj\Debug\Model.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -88,11 +88,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="Properties\DataSources\ChatClient.ServiceReference1.ChatServiceClient.datasource" />
-    <None Include="Properties\DataSources\ChatClient.ServiceReference1.IChatService.datasource" />
-    <None Include="Properties\DataSources\ChatClient.ServiceReference1.IChatServiceChannel.datasource" />
-    <None Include="Properties\DataSources\ChatClient.ServiceReference1.Person.datasource" />
-    <None Include="Properties\DataSources\Model.Message.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -118,12 +113,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\TestServer\TestServer.csproj">
-      <Project>{0307f273-aa57-4200-afda-0acc6fc34939}</Project>
-      <Name>TestServer</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

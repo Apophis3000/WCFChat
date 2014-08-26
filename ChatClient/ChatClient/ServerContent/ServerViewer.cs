@@ -4,9 +4,10 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ServiceModel;
 using System.Windows.Forms;
 
-using System.ServiceModel;
+using Model;
 using ChatClient.ServiceReference1;
 
 namespace ChatClient.ServerContent
@@ -26,17 +27,25 @@ namespace ChatClient.ServerContent
 
         public TreeView Update(IChatService remoteProxy)
         {
-            //Dienst - Channels und ihre Benutzer
-            List<List<string>> usersInChannels = testService.GetUsersAndTheirChannels();
-            //remoteProxy. // GetUsers() fehlt!!
-
+            Person[] allUsers = remoteProxy.GetUsers();
 
             //Serveransicht aktualisieren
             treeViewServer.BeginUpdate();
 
-            for (int index = 0; index < serverChannels.Count; index++)
+            foreach (Channel serverChannel in serverChannels)
             {
-                UpdateUsersInChannel(index, usersInChannels[index]);
+                List<string> usersInChannel = new List<string>();
+
+                foreach (Person user in allUsers)
+                {
+                    if (user.CurrentChannelName == serverChannel.Name)
+                    {
+                        usersInChannel.Add(user.UserName);
+                    }
+                }
+
+                UpdateUsersInChannel(serverChannel.Id, usersInChannel);
+                usersInChannel.Clear();
             }
 
             treeViewServer.EndUpdate();
@@ -63,10 +72,12 @@ namespace ChatClient.ServerContent
             string[] channelNames = remoteProxy.GetChannels();
 
             serverChannels = new List<Channel>();
+            int channelId = 0;
 
             foreach (string channelName in channelNames)
             {
-                serverChannels.Add(new Channel(0, channelName));
+                serverChannels.Add(new Channel(channelId, channelName));
+                channelId++;
             }
 
             TreeNode rootNode = new TreeNode();
