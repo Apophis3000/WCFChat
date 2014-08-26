@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.IO;
@@ -63,7 +64,13 @@ namespace ChatClient
         }
         private void verbindenToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            remoteFactory = new ChannelFactory<IChatService>("WSHttpBinding_IChatService");
+            //Auslesen der Adresse zur Laufzeit
+            EndpointIdentity endId = EndpointIdentity.CreateSpnIdentity("chatclient");
+            Uri uri = new Uri(ConfigurationManager.AppSettings["serviceURI"]);
+            var address = new EndpointAddress(uri, endId);
+
+            //Einbinden des Services
+            remoteFactory = new ChannelFactory<IChatService>("WSHttpBinding_IChatService", address);
             remoteProxy = remoteFactory.CreateChannel();
 
             isConnected = this.Connect(this.GetIP(settingsForm.Address), int.Parse(settingsForm.Port));
