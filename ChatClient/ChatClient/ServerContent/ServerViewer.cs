@@ -14,7 +14,13 @@ namespace ChatClient.ServerContent
 {
     public class ServerViewer
     {
-        List<Channel> serverChannels;
+        public Person[] ConnectedUsers
+        {
+            get;
+            set;
+        }
+
+        private List<Channel> serverChannels;
         private TreeView treeViewServer;
 
         public ServerViewer(TreeView treeViewServer, IChatService remoteProxy)
@@ -28,6 +34,7 @@ namespace ChatClient.ServerContent
         public TreeView Update(IChatService remoteProxy, Person me)
         {
             Person[] allUsers = remoteProxy.GetUsers();
+            ConnectedUsers = allUsers;
 
             //Serveransicht aktualisieren
             treeViewServer.BeginUpdate();

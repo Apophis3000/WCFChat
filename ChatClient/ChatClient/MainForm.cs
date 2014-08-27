@@ -65,7 +65,7 @@ namespace ChatClient
         }
         private void verbindenToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //Auslesen der Adresse zur Laufzeit
+            //Auslesen Serverkonfigurationen und Adresse
             EndpointIdentity endId = EndpointIdentity.CreateSpnIdentity("chatclient");
             Uri uri = new Uri(ConfigurationManager.AppSettings["serviceURI"]);
             var address = new EndpointAddress(uri, endId);
@@ -243,28 +243,33 @@ namespace ChatClient
         {
             try
             {
+                //Aktualisieren der Benutzer
                 if (this.AnyUserSwitched())
                 {
                     treeViewServer = serverViewer.Update(remoteProxy, me);
                 }
 
+                //Aktuelle Nachrichten erhalten
                 Model.Message[] messages = remoteProxy.RetrieveMessages(me.UserName);
 
                 if (messages != null && messages.Length > 0 && messages[0] != null)
                 {
                     foreach (Model.Message message in messages)
                     {
+                        //Sagen-Chat
                         if (message.MessageType == EMessageType.Say)
                         {
                             this.WriteNewMessageToChat(message.Text, ClientMessageType.Say, message.Author, message.Recipient);
                         }
                         else if (message.MessageType == EMessageType.Whisper)
                         {
+                            //Ich flüstere
                             if (me.UserName == message.Author)
                             {
                                 this.WriteNewMessageToChat(message.Text, ClientMessageType.WhisperFromMe, message.Author, message.Recipient);
                             }
 
+                            //Mir wird geflüstert
                             if (me.UserName == message.Recipient)
                             {
                                 this.WriteNewMessageToChat(message.Text, ClientMessageType.WhisperToMe, message.Author, message.Recipient);
@@ -272,6 +277,7 @@ namespace ChatClient
                         }
                         else
                         {
+                            //Nachricht vom Server
                             this.WriteNewMessageToChat(message.Text, ClientMessageType.System, message.Author, message.Recipient);
                         }
                     }
@@ -522,7 +528,8 @@ namespace ChatClient
         }
         private bool AnyUserSwitched()
         {
-            Person[] allUsers = remoteProxy.GetUsers();
+            //Person[] allUsers = remoteProxy.GetUsers();
+            Person[] allUsers = serverViewer.ConnectedUsers;
 
             foreach (Person user in allUsers)
             {
