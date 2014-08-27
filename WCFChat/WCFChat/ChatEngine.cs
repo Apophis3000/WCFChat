@@ -128,7 +128,7 @@ namespace WCFChat
 
         public bool HasSwitchedChannel(string user)
         {
-            bool result = false;
+            bool result = true;
 
             foreach (var c in channels)
             {
