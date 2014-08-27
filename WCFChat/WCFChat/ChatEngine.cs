@@ -37,6 +37,8 @@ namespace WCFChat
             }
 
             Person p = new Person() { UserName = user, IsConnected = true };
+            p.LastChannelName = "DISCONNECTED";
+
             messages.Add(user, new List<Message>());            
             
             messages[user].Add(new Message(user, "Welcome to the chat!", EMessageType.System));
@@ -54,11 +56,12 @@ namespace WCFChat
 
                 if (leaver != null)
                 {
+                    leaver.CurrentChannelName = "DISCONNECTED";
                     channel.Value.Remove(leaver);
                     success = true;
                 }
             }
-
+                        
             messages.Remove(user);
             return success;
         }
@@ -88,7 +91,12 @@ namespace WCFChat
                 if (recpt != null)
                 {
                     messages[sender].Add(new Message(sender, recipient, message, EMessageType.Whisper));
-                    messages[recpt.UserName].Add(new Message(sender, recipient, message, EMessageType.Whisper));
+
+                    if (sender != recpt.UserName)
+                    {
+                        messages[recpt.UserName].Add(new Message(sender, recipient, message, EMessageType.Whisper));
+                    }
+
                     return;
                 }
             }        
@@ -120,17 +128,20 @@ namespace WCFChat
 
         public bool HasSwitchedChannel(string user)
         {
+            bool result = true;
+
             foreach (var c in channels)
             {
                 Person p = c.Value.Find(x => x.UserName == user);
 
                 if (p != null)
                 {
-                    return p.LastChannelName != p.CurrentChannelName;
+                    result =  p.LastChannelName != p.CurrentChannelName;
+                    p.LastChannelName = p.CurrentChannelName;
                 }
             }
 
-            return false;
+            return result;
         }
 
         private void JoinChannel(Person p, string channelName)
@@ -140,12 +151,7 @@ namespace WCFChat
                 if (c.Key == channelName)
                 {
                     c.Value.Add(p);
-
-                    if (p.LastChannelName == null)
-                    {
-                        p.LastChannelName = channelName;
-                    }
-
+                   
                     p.CurrentChannelName = channelName;
 
                     foreach (var u in c.Value)
